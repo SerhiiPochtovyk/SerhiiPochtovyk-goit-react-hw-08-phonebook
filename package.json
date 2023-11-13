@@ -2,7 +2,7 @@
   "name": "react-homework-template",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://SerhiiPochtovyk.github.io/goit-react-hw-07-phonebook/",
+  "homepage": "https://SerhiiPochtovyk.github.io/goit-react-hw-08-phonebook/",
   "dependencies": {
     "@redux-devtools/extension": "^3.2.6",
     "@reduxjs/toolkit": "^1.9.7",
@@ -48,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.5"
   }
 }
