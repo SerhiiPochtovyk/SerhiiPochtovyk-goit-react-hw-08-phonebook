@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button } from './ContactFormStyles'; 
+import { Form, Input, Button } from './ContactFormStyles';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../redux/contactsSlice';
 
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -20,7 +23,12 @@ const ContactForm = ({ onAddContact }) => {
     e.preventDefault();
 
     if (name && number) {
-      onAddContact(name, number);
+      const newContact = {
+        name,
+        number,
+      };
+
+      dispatch(addContact(newContact));
       setName('');
       setNumber('');
     }
@@ -48,8 +56,6 @@ const ContactForm = ({ onAddContact }) => {
     </Form>
   );
 };
-
-
 
 ContactForm.propTypes = {
   onAddContact: PropTypes.func.isRequired,

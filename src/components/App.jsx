@@ -4,15 +4,12 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addContact,
-  deleteContact,
-  updateFilter,
-} from './redux/contactsSlice';
+import { fetchContacts, addContact, deleteContact, updateFilter } from './redux/contactsSlice';  
+
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts.contacts);
+  const contacts = useSelector((state) => state.contacts.items);
   const filter = useSelector((state) => state.contacts.filter);
 
   const addContactHandler = (name, number) => {
@@ -24,7 +21,6 @@ const App = () => {
     }
 
     const newContact = {
-      id: `id-${Date.now()}`,
       name,
       number,
     };
@@ -48,6 +44,11 @@ const App = () => {
   };
 
   const filteredContacts = getFilteredContacts();
+
+
+  React.useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Container>
