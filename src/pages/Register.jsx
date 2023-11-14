@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { registerUserThunk } from 'redux/auth/operations';
 import { selectIsLoggedIn } from 'redux/auth/selectors';
 import img_1 from '../images/img_1.jpg';
-import { BsPhoneVibrate } from 'react-icons/bs';
+import { FcCellPhone } from "react-icons/fc";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -18,12 +18,14 @@ const Register = () => {
     reset,
     formState: { errors },
   } = useForm();
+
   const submit = async data => {
     try {
       await dispatch(registerUserThunk(data)).unwrap();
-      toast.success(`${data.name} welcome to your Phonebook!`);
+      Notify.success(`${data.name}, welcome to your Phonebook!`);
+      navigate('/contacts');
     } catch (error) {
-      toast.error('Sorry, registration failed');
+      Notify.failure('Sorry, registration failed');
     }
     reset();
   };
@@ -47,7 +49,7 @@ const Register = () => {
 
       <div className=" bg-white text-center p-6 rounded-md max-w-md w-full m-4 relative z-10 border-solid border-2 border-sky-500 ">
         <form onSubmit={handleSubmit(submit)} className="">
-          <BsPhoneVibrate
+          <FcCellPhone
             size={60}
             style={{
               color: '#fda403',
@@ -56,21 +58,27 @@ const Register = () => {
             }}
           />
           <input
-            {...register('name', { required: 'This is required' })}
-            className="input input-bordered input-info w-full max-w-xs mb-6"
+            {...register('name', { required: 'This field is required' })}
+            className={`input input-bordered input-info w-full max-w-xs mb-6 ${
+              errors.name ? 'border-red-500' : ''
+            }`}
             placeholder="Name"
           />
-          <p>{errors.name?.message}</p>
+          <p className="text-red-500 text-sm">{errors.name?.message}</p>
           <input
-            {...register('email', { required: 'This is required' })}
-            className="input input-bordered input-info w-full max-w-xs mb-6"
+            {...register('email', { required: 'This field is required' })}
+            className={`input input-bordered input-info w-full max-w-xs mb-6 ${
+              errors.email ? 'border-red-500' : ''
+            }`}
             placeholder="Email"
           />
           <p className="text-red-500 text-sm">{errors.email?.message}</p>
           <input
             type="password"
-            {...register('password', { required: 'This is required' })}
-            className="input input-bordered input-info w-full max-w-xs mb-6"
+            {...register('password', { required: 'This field is required' })}
+            className={`input input-bordered input-info w-full max-w-xs mb-6 ${
+              errors.password ? 'border-red-500' : ''
+            }`}
             placeholder="Password"
           />
           <p className="text-red-500 text-sm">{errors.password?.message}</p>

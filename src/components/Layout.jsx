@@ -10,6 +10,7 @@ const Layout = () => {
         <Navbar />
       </header>
       <main>
+    
         <Suspense
           fallback={
             <div className="flex justify-center items-center">

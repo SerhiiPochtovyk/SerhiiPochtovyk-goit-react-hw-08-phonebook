@@ -15,3 +15,4 @@ export const deleteContact = createAsyncThunk('contacts/deleteContact', async (c
   await axios.delete(`https://6551ddf85c69a77903292ee4.mockapi.io/contacts/${contactId}`);
   return contactId;
 });
+

@@ -6,7 +6,7 @@ import PrivateRoute from './hoc/PrivateRoute';
 import { selectIsRefresh } from 'redux/auth/selectors';
 import CategoryLoader from './ContentLoader';
 import Layout from './Layout';
-import NotFound from 'pages/NotFound';
+import NotFound from '../pages/NotFound';
 
 const Home = lazy(() => import('pages/Home'));
 const Phonebook = lazy(() => import('pages/Phonebook'));
