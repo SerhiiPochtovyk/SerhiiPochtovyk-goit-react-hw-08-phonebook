@@ -1,67 +1,56 @@
-import React from 'react';
-import { Container, Title } from './AppStyles';
-import ContactForm from './ContactForm/ContactForm';
-import ContactList from './ContactList/ContactList';
-import Filter from './Filter/Filter';
+import React, { lazy, useEffect } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts, addContact, deleteContact, updateFilter } from './redux/contactsSlice';  
+import { refreshUserThunk } from 'redux/auth/operations';
+import PrivateRoute from './hoc/PrivateRoute';
+import { selectIsRefresh } from 'redux/auth/selectors';
+import CategoryLoader from './ContentLoader';
+import Layout from './Layout';
+import NotFound from 'pages/NotFound';
 
+const Home = lazy(() => import('pages/Home'));
+const Phonebook = lazy(() => import('pages/Phonebook'));
+const Login = lazy(() => import('pages/Login'));
+const Register = lazy(() => import('pages/Register'));
 
-const App = () => {
+export const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts.items);
-  const filter = useSelector((state) => state.contacts.filter);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const refresh = useSelector(selectIsRefresh);
 
-  const addContactHandler = (name, number) => {
-    const isNameExists = contacts.some((contact) => contact.name === name);
-
-    if (isNameExists) {
-      alert("Це ім'я вже існує в телефонній книзі.");
-      return;
-    }
-
-    const newContact = {
-      name,
-      number,
-    };
-
-    dispatch(addContact(newContact));
-  };
-
-  const deleteContactHandler = (contactId) => {
-    dispatch(deleteContact(contactId));
-  };
-
-  const handleFilterChange = (e) => {
-    dispatch(updateFilter(e.target.value));
-  };
-
-  const getFilteredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  const filteredContacts = getFilteredContacts();
-
-
-  React.useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  useEffect(() => {
+    dispatch(refreshUserThunk());
+    navigate(`/${location.pathname}`);
+  }, [dispatch, location.pathname, navigate]);
 
   return (
-    <Container>
-      <Title>Phonebook</Title>
-      <ContactForm onAddContact={addContactHandler} />
-      <Title>Contacts</Title>
-      <Filter filter={filter} onFilterChange={handleFilterChange} />
-      <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={deleteContactHandler}
-      />
-    </Container>
+    <>
+      {refresh ? (
+        <div className="flex justify-center items-center">
+          <CategoryLoader />
+        </div>
+      ) : (
+        <div>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+
+              <Route
+                path="contacts"
+                element={
+                  <PrivateRoute>
+                    <Phonebook />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="register" element={<Register />} />
+              <Route path="login" element={<Login />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      )}
+    </>
   );
 };
-
-export default App;

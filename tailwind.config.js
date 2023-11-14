@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        nunito: ['nunito', 'sans-serif'],
+      },
+    },
   },
-  plugins: [],
-}
-
+  plugins: [require('daisyui')],
+};
